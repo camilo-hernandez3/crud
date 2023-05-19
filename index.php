@@ -5,9 +5,9 @@ session_start();
 
 require 'config/database.php';
 
-$sqlPeliculas = "SELECT p.id, p.nombre, p.descripcion, g.nombre AS genero FROM pelicula AS p
-INNER JOIN genero AS g ON p.id_genero=g.id";
-$peliculas = $conn->query($sqlPeliculas);
+$sqlProductos = "SELECT p.id, p.nombre, p.descripcion, c.nombre AS categoria FROM producto AS p
+INNER JOIN categoria AS c ON p.id_categoria=c.id";
+$productos = $conn->query($sqlProductos);
 
 $dir = "posters/";
 
@@ -30,7 +30,7 @@ $dir = "posters/";
 
     <div class="container py-3">
 
-        <h2 class="text-center">Aplicaciòn de Peliculas</h2>
+        <h2 class="text-center">Aplicaciòn de Productos</h2>
 
         <hr>
 
@@ -57,19 +57,19 @@ $dir = "posters/";
                     <th>#</th>
                     <th>Nombre</th>
                     <th width="45%">Descripción</th>
-                    <th>Género</th>
-                    <th>Poster</th>
+                    <th>Categoria</th>
+                    <th>Imagen</th>
                     <th>Acción</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php if($peliculas->num_rows >0) {while ($row = $peliculas->fetch_assoc()) { ?>
+                <?php if($productos->num_rows >0) {while ($row = $productos->fetch_assoc()) { ?>
                     <tr>
                         <td><?= $row['id']; ?></td>
                         <td><?= $row['nombre']; ?></td>
                         <td><?= $row['descripcion']; ?></td>
-                        <td><?= $row['genero']; ?></td>
+                        <td><?= $row['categoria']; ?></td>
                         <td><img src="<?= $dir . $row['id'] . '.jpg?n=' . time(); ?>" width="100"></td>
                         <td>
                             <a href="#" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editaModal" data-bs-id="<?= $row['id']; ?>"><i class="fa-solid fa-pen-to-square"></i> Editar</a>
@@ -80,7 +80,7 @@ $dir = "posters/";
                 <?php }}else{
                     echo "
                        <tr>
-                        <td  colspan='6' class='text-center'> No hay peliculas para mostrar</td>
+                        <td  colspan='6' class='text-center'> No hay productos para mostrar</td>
                        </tr>
                     ";
                 } ?>
@@ -91,13 +91,13 @@ $dir = "posters/";
 
 
     <?php
-    $sqlGenero = "SELECT id, nombre FROM genero";
-    $generos = $conn->query($sqlGenero);
+    $sqlCategoria = "SELECT id, nombre FROM categoria";
+    $categorias = $conn->query($sqlCategoria);
     ?>
 
     <?php include 'nuevoModal.php'; ?>
 
-    <?php $generos->data_seek(0); ?>
+    <?php $categorias->data_seek(0); ?>
 
     <?php include 'editaModal.php'; ?>
     <?php include 'eliminaModal.php'; ?>
@@ -107,6 +107,7 @@ $dir = "posters/";
         let editaModal = document.getElementById('editaModal')
         let eliminaModal = document.getElementById('eliminaModal')
 
+        /* se dispara cuando se termina de cargar el modal */
         nuevoModal.addEventListener('shown.bs.modal', event => {
             nuevoModal.querySelector('.modal-body #nombre').focus()
         })
@@ -114,29 +115,30 @@ $dir = "posters/";
         nuevoModal.addEventListener('hide.bs.modal', event => {
             nuevoModal.querySelector('.modal-body #nombre').value = ""
             nuevoModal.querySelector('.modal-body #descripcion').value = ""
-            nuevoModal.querySelector('.modal-body #genero').value = ""
+            nuevoModal.querySelector('.modal-body #categoria').value = ""
             nuevoModal.querySelector('.modal-body #poster').value = ""
         })
 
         editaModal.addEventListener('hide.bs.modal', event => {
             editaModal.querySelector('.modal-body #nombre').value = ""
             editaModal.querySelector('.modal-body #descripcion').value = ""
-            editaModal.querySelector('.modal-body #genero').value = ""
+            editaModal.querySelector('.modal-body #categoria').value = ""
             editaModal.querySelector('.modal-body #img_poster').value = ""
             editaModal.querySelector('.modal-body #poster').value = ""
         })
 
         editaModal.addEventListener('shown.bs.modal', event => {
+            /* detected the button click */
             let button = event.relatedTarget
             let id = button.getAttribute('data-bs-id')
 
             let inputId = editaModal.querySelector('.modal-body #id')
             let inputNombre = editaModal.querySelector('.modal-body #nombre')
             let inputDescripcion = editaModal.querySelector('.modal-body #descripcion')
-            let inputGenero = editaModal.querySelector('.modal-body #genero')
+            let inputCategoria = editaModal.querySelector('.modal-body #categoria')
             let poster = editaModal.querySelector('.modal-body #img_poster')
 
-            let url = "getPelicula.php"
+            let url = "getProduct.php"
             let formData = new FormData()
             formData.append('id', id)
 
@@ -149,7 +151,7 @@ $dir = "posters/";
                     inputId.value = data.id
                     inputNombre.value = data.nombre
                     inputDescripcion.value = data.descripcion
-                    inputGenero.value = data.id_genero
+                    inputCategoria.value = data.id_categoria
                     poster.src = '<?= $dir ?>' + data.id + '.jpg'
 
                 }).catch(err => console.log(err))

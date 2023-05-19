@@ -22,11 +22,11 @@
                     </div>
 
                     <div class="mb-2">
-                        <label for="genero" class="form-label">Género:</label>
-                        <select name="genero" id="genero" class="form-select  form-select-sm" required>
+                        <label for="categoria" class="form-label">Categoria:</label>
+                        <select name="categoria" id="categoria" class="form-select  form-select-sm" required>
                             <option value="">Seleccionar...</option>
-                            <?php while ($row_genero = $generos->fetch_assoc()) { ?>
-                                <option value="<?php echo $row_genero["id"]; ?>"><?= $row_genero["nombre"] ?></option>
+                            <?php while ($row_categorias = $categorias->fetch_assoc()) { ?>
+                                <option value="<?php echo $row_categorias["id"]; ?>"><?= $row_categorias["nombre"] ?></option>
                             <?php } ?>
                         </select>
                     </div>

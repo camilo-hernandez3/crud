@@ -20,11 +20,11 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="genero" class="form-label">Género:</label>
-                        <select name="genero" id="genero" class="form-select" required>
+                        <label for="categoria" class="form-label">Categoria:</label>
+                        <select name="categoria" id="categoria" class="form-select" required>
                             <option value="">Seleccionar...</option>
-                            <?php while ($row_genero = $generos->fetch_assoc()) { ?>
-                                <option value="<?php echo $row_genero["id"]; ?>"><?= $row_genero["nombre"] ?></option>
+                            <?php while ($row_categoria = $categorias->fetch_assoc()) { ?>
+                                <option value="<?php echo $row_categoria["id"]; ?>"><?= $row_categoria["nombre"] ?></option>
                             <?php } ?>
                         </select>
                     </div>
